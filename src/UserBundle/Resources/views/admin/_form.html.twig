@@ -1,0 +1,30 @@
+<div class="card card-block">
+    {{ form_start(userForm) }}
+    <div class="md-form">
+        {{ form_row(userForm.email) }}
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="md-form">
+                {{ form_row(userForm.firstName) }}
+            </div>
+
+        </div>
+        <div class="col-md-6">
+            <div class="md-form">
+                {{ form_row(userForm.lastName) }}
+            </div>
+        </div>
+    </div>
+
+    {{ form_row(userForm.roles, { 'attr': {'class': 'mdb-select'} }) }}
+
+    <button type="submit" class="btn btn-default pull-right" formnovalidate>Save</button>
+
+
+    {{ form_end(userForm) }}
+</div>
+<div class="text-center">
+    <a href="{{ path('admin_user_list') }}">&laquo; Back to User List</a>
+</div>

@@ -1,0 +1,32 @@
+{% extends 'layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+
+    </style>
+{% endblock %}
+
+{% block sidebar %}
+    <div class="dropdown-divider"></div>
+    <div class="nav-sidebar list-group">
+
+        <a href="/schedule"
+           class="list-group-item list-group-item-action{% if app.request.attributes.get('_route') starts with 'schedule' %} active{% endif %}">
+            <i class="fa fa-rocket" aria-hidden="true"></i>
+            <span class="hidden-sm-down">Find a Class</span>
+        </a>
+
+    </div>
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <p>Schedule</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

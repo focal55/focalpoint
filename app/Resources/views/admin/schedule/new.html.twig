@@ -1,0 +1,27 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block sidebar %}
+    <div class="dropdown-divider"></div>
+    <div class="nav-sidebar list-group">
+
+        <a href="{{ path('admin_schedule_new') }}"
+           class="list-group-item list-group-item-action{% if app.request.attributes.get('_route') starts with 'classes' %} active{% endif %}">
+            <i class="fa fa-rocket" aria-hidden="true"></i>
+            <span class="hidden-sm-down">Add Event</span>
+        </a>
+
+    </div>
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>New Event</h1>
+
+                {{ include('admin/schedule/_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

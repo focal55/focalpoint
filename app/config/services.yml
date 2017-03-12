@@ -1,0 +1,18 @@
+parameters:
+
+services:
+    app.security.login_form_authenticator:
+        class: UserBundle\Security\LoginFormAuthenticator
+        autowire: true
+
+    pdo:
+        class: PDO
+        arguments:
+            dsn: mysql:host=%database_host%;dbname=%database_name%
+            user: %database_user%
+            password: %database_password%
+        calls:
+            - [ setAttribute, [3, 2] ] # \PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION
+    session.handler.pdo:
+        class:     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
+        arguments: ['@pdo', {lock_mode: 0}]
