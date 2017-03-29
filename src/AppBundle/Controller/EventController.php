@@ -2,8 +2,6 @@
 
 namespace AppBundle\Controller;
 
-
-use AppBundle\AppBundle;
 use AppBundle\Entity\Event;
 use AppBundle\Form\EventFormType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
