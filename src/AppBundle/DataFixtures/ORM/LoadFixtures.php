@@ -2,10 +2,7 @@
 
 namespace AppBundle\DataFixtures\ORM;
 
-use AppBundle\Entity\Environment;
 use AppBundle\Entity\Event;
-use AppBundle\Entity\Project;
-use AppBundle\Entity\Task;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use AccountBundle\Entity\Account;
@@ -84,21 +81,30 @@ class LoadFixtures implements FixtureInterface
         $manager->flush();
 
         // Events
+        $date = new \DateTime('2017-01-01 6:00:00');
         $e = new Event();
         $e->setTitle('Small Group');
-        $e->setDayOfWeek(['Mon', 'Wed', 'Fri']);
+        $e->setDayOfWeek(["mon", "wed", "fri"]);
         $e->setEventStartTime('5:30pm');
         $e->setEventEndTime('6:30pm');
         $e->setRegistrationType('standard');
-        $e->setStartDate(strtotime('01/01/2017'));
+        $e->setStartDate($date);
+        $e->setPrimaryInstructor($users['joe']->getId());
+        $e->setStatus('active');
+
         $manager->persist($e);
 
         // Events
         $e = new Event();
         $e->setTitle('Pilates');
-        $e->setDayOfWeek(['Tue', 'Thurs']);
+        $e->setDayOfWeek(["tue", "thur"]);
+        $e->setEventStartTime('5:30pm');
+        $e->setEventEndTime('6:30pm');
         $e->setRegistrationType('standard');
-        $e->setStartDate(strtotime('01/01/2017'));
+        $e->setStartDate($date);
+        $e->setPrimaryInstructor($users['joe']->getId());
+        $e->setStatus('active');
+
         $manager->persist($e);
 
         $manager->flush();

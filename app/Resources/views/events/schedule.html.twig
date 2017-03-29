@@ -1,0 +1,65 @@
+{% extends 'layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+
+    </style>
+{% endblock %}
+
+{% block sidebar %}
+    <div class="dropdown-divider"></div>
+    <div class="nav-sidebar list-group">
+
+        <a href="{{ path('event_new') }}"
+           class="list-group-item list-group-item-action{% if app.request.attributes.get('_route') starts with 'classes' %} active{% endif %}">
+            <i class="fa fa-rocket" aria-hidden="true"></i>
+            <span class="hidden-sm-down">Add Event</span>
+        </a>
+
+    </div>
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <table width="100%">
+                    <thead>
+                        <tr>
+                            <th>{{ calendar.sunday }}</th>
+                            <th>{{ calendar.monday }}</th>
+                            <th>{{ calendar.tuesday }}</th>
+                            <th>{{ calendar.wednesday }}</th>
+                            <th>{{ calendar.thursday }}</th>
+                            <th>{{ calendar.friday }}</th>
+                            <th>{{ calendar.saturday }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+
+                            {% for day in displayEvents %}
+                            <td class="dayColumn" valign="top">
+                                {% for event in day %}
+                                    <div class="event" style="background:lightgrey; padding:5px; margin-bottom:10px;">
+                                        <a href="{{ path('event_detail', {'id' : event.id}) }}">
+                                            <div class="time">{{ event.start }} - {{ event.end }}</div>
+                                            <div class="title">{{ event.title }}</div>
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                            </td>
+                            {% endfor %}
+
+                        </tr>
+                        <tr>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

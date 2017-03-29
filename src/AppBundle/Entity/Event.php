@@ -7,8 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Event
  *
- * @ORM\Table(name="event")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\EventRepository")
+ * @ORM\Table(name="event")
  */
 class Event
 {
@@ -64,7 +64,7 @@ class Event
     /**
      * @ORM\Column(nullable=false)
      * @ORM\OneToOne(targetEntity="UserBundle\Entity\User")
-     * @ORM\JoinColumn(name="id", referencedColumnName="id")
+     * @ORM\JoinTable(name="users")
      */
     protected $primaryInstructor;
 
@@ -121,7 +121,21 @@ class Event
      * @param mixed $eventStartTime
      */
     public function setEventStartTime($eventStartTime) {
-        $this->eventStartTime = $eventStartTime;
+        // If value is a date object, convert to string.
+        if (is_object($eventStartTime)) {
+            $this->eventStartTime = $eventStartTime->format('g:ia');
+        }
+        else {
+            $this->eventStartTime = $eventStartTime;
+        }
+    }
+
+    /**
+     * @return object $eventStartTime
+     */
+    public function setEventStartTimeForm() {
+        $eventStartTimeForm = new \DateTime('1-1-2010 ' . $this->eventStartTime);
+        $this->eventStartTime = $eventStartTimeForm;
     }
 
     /**
@@ -133,9 +147,24 @@ class Event
 
     /**
      * @param mixed $eventEndTime
+     * @ORM\PrePersist
      */
     public function setEventEndTime($eventEndTime) {
-        $this->eventEndTime = $eventEndTime;
+        // If value is a date object, convert to string.
+        if (is_object($eventEndTime)) {
+            $this->eventEndTime = $eventEndTime->format('g:ia');
+        }
+        else {
+            $this->eventEndTime = $eventEndTime;
+        }
+    }
+
+    /**
+     * @return object $eventStartTime
+     */
+    public function setEventEndTimeForm() {
+        $eventEndTimeForm = new \DateTime('1-1-2010 ' . $this->eventEndTime);
+        $this->eventEndTime = $eventEndTimeForm;
     }
 
     /**

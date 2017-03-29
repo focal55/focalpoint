@@ -29,7 +29,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $status = 0;
+    protected $active = false;
 
     /**
      * @var \DateTime $created
@@ -103,12 +103,12 @@ class User implements UserInterface
         return $this->id;
     }
 
-    public function getStatus() {
-        return $this->status;
+    public function getActive() {
+        return $this->active;
     }
 
-    public function setStatus($status) {
-        $this->status = $status;
+    public function setActive($active) {
+        $this->active = $active;
     }
 
     public function getCreated() {
