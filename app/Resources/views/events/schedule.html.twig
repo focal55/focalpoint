@@ -28,13 +28,13 @@
                 <table width="100%">
                     <thead>
                         <tr>
-                            <th>{{ calendar.sunday }}</th>
-                            <th>{{ calendar.monday }}</th>
-                            <th>{{ calendar.tuesday }}</th>
-                            <th>{{ calendar.wednesday }}</th>
-                            <th>{{ calendar.thursday }}</th>
-                            <th>{{ calendar.friday }}</th>
-                            <th>{{ calendar.saturday }}</th>
+                            <th>{{ calendar.sun.display }}</th>
+                            <th>{{ calendar.mon.display }}</th>
+                            <th>{{ calendar.tue.display }}</th>
+                            <th>{{ calendar.wed.display }}</th>
+                            <th>{{ calendar.thur.display }}</th>
+                            <th>{{ calendar.fri.display }}</th>
+                            <th>{{ calendar.sat.display }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -44,7 +44,7 @@
                             <td class="dayColumn" valign="top">
                                 {% for event in day %}
                                     <div class="event" style="background:lightgrey; padding:5px; margin-bottom:10px;">
-                                        <a href="{{ path('event_detail', {'id' : event.id}) }}">
+                                        <a href="{{ path('event_detail', {'id' : event.id, 'timestamp': event.timestamp}) }}">
                                             <div class="time">{{ event.start }} - {{ event.end }}</div>
                                             <div class="title">{{ event.title }}</div>
                                         </a>

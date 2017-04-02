@@ -8,16 +8,14 @@ use Doctrine\ORM\Mapping as ORM;
  * Event
  *
  * @ORM\Entity(repositoryClass="AppBundle\Repository\EventRepository")
- * @ORM\Table(name="event")
+ * @ORM\Table(name="events")
  */
 class Event
 {
     /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(type="guid")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="UUID")
      */
     protected $id;
 
@@ -237,5 +235,8 @@ class Event
         $this->primaryInstructor = $primaryInstructor;
     }
 
+    public function __toString() {
+        return $this->id;
+    }
 }
 
