@@ -13,9 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
 class Event
 {
     /**
-     * @ORM\Column(type="guid")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="UUID")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="integer")
      */
     protected $id;
 
@@ -129,6 +129,7 @@ class Event
     }
 
     /**
+     * Change to dateTime object so symfony can show the date widget.
      * @return object $eventStartTime
      */
     public function setEventStartTimeForm() {
@@ -158,6 +159,7 @@ class Event
     }
 
     /**
+     * Change to dateTime object so symfony can show the date widget.
      * @return object $eventStartTime
      */
     public function setEventEndTimeForm() {
@@ -236,7 +238,7 @@ class Event
     }
 
     public function __toString() {
-        return $this->id;
+        return $this->title . ' ' . $this->id;
     }
 }
 

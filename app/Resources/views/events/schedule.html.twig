@@ -25,6 +25,30 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-12">
+                <div class="date-changer">
+                    <ul>
+                        {% if previous_sunday is not empty %}
+                            <li><a href="{{ path('schedule', {'timestamp': previous_sunday}) }}">Previous</a></li>
+                        {% endif %}
+                        {% if current_date is not empty %}
+                            <li><a href="{{ path('schedule', {'timestamp': current_date}) }}">Current Week</a></li>
+                        {% endif %}
+                        {% if next_sunday is not empty %}
+                            <li><a href="{{ path('schedule', {'timestamp': next_sunday}) }}">Next</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <h1>{{ month_year }}</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
                 <table width="100%">
                     <thead>
                         <tr>

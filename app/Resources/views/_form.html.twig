@@ -1,0 +1,17 @@
+<div class="card card-block">
+    {% block form_start %}
+    {{ form_start(form) }}
+    {% endblock %}
+
+    {% block widgets %}
+    {{ form_widget(form) }}
+    {% endblock %}
+
+    {% block submit %}
+        <button type="submit" class="btn btn-block btn-success" formnovalidate>Save</button>
+    {% endblock %}
+
+    {% block form_end %}
+    {{ form_end(form) }}
+    {% endblock %}
+</div>

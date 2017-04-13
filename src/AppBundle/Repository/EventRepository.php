@@ -1,8 +1,11 @@
 <?php
 
 namespace AppBundle\Repository;
+use AppBundle\AppBundle;
 use AppBundle\Entity\Event;
+use AppBundle\Entity\EventModification;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * EventRepository
@@ -12,9 +15,13 @@ use Doctrine\ORM\EntityRepository;
  */
 class EventRepository extends EntityRepository
 {
-    public function findUpcoming()
+    public function findUpcoming($timestamp = null)
     {
         $start = new \DateTime();
+        if ($timestamp) {
+            $start->setTimestamp($timestamp);
+        }
+
         $qb = $this->createQueryBuilder('events')
             ->where('events.startDate < :start')
             ->setParameter('start', $start)

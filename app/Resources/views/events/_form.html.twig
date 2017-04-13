@@ -1,6 +1,46 @@
-<div class="card card-block">
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button type="submit" class="btn btn-block btn-success" formnovalidate>Save</button>
+{% extends '_form.html.twig' %}
+
+{% block widgets %}
+    {{ form_row(form.title) }}
+    {{ form_row(form.startDate) }}
+    {{ form_row(form.endDate) }}
+    {{ form_row(form.eventStartTime) }}
+    {{ form_row(form.eventEndTime) }}
+    {{ form_row(form.dayOfWeek) }}
+    {{ form_row(form.registrationType) }}
+    {{ form_row(form.status) }}
+    {{ form_row(form.primaryInstructor) }}
+{% endblock %}
+
+{% block submit %}
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmationModal">Save</button>
+
+    <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Update</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            {{ form_row(form.editEventOptions) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Save Changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{%  endblock %}
+
+{% block form_end %}
     {{ form_end(form) }}
-</div>
+{% endblock %}

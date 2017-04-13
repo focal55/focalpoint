@@ -66,6 +66,7 @@ class EventFormType extends AbstractType
             'choices' => [
                 'Active' => 'active',
                 'Paused' => 'paused',
+                'Cancelled' => 'cancelled'
             ],
             'placeholder' => '- Select status -',
             'empty_data' => null,
@@ -78,6 +79,19 @@ class EventFormType extends AbstractType
                 /* @var User $user */
                 return $user->getFirstName() . ' ' . $user->getLastName();
             },
+        ]);
+
+        //Pseudo fields for editing.
+        $builder->add('editEventOptions', ChoiceType::class, [
+            'mapped' => false,
+            'label' => 'Would you like to change only this event or all events',
+            'choices' => [
+                'All events' => 'all_events',
+                'Only this event' => 'only_this_event'
+            ],
+            'expanded' => true,
+            'multiple' => false,
+            'data' => 'all_events'
         ]);
     }
 
