@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Repository;
+use AppBundle\Entity\Event;
 use AppBundle\Entity\Reservation;
 use Doctrine\ORM\EntityRepository;
 
@@ -12,13 +13,11 @@ use Doctrine\ORM\EntityRepository;
  */
 class ReservationRepository extends EntityRepository
 {
-    public function findUpcoming()
+    public function findEventReservations(Event $event)
     {
-        $start = new \DateTime();
-        $qb = $this->createQueryBuilder('event')
-            ->where('event.startDate < :start')
-            ->setParameter('start', $start)
-            ->orderBy('event.eventStartTime', 'ASC');
+        $qb = $this->createQueryBuilder('reservation')
+            ->where('reservation.event = :event')
+            ->setParameter('event', $event);
 
         return $qb->getQuery()->getResult();
     }

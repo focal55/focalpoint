@@ -34,5 +34,10 @@
                 <a class="btn btn-success" href="{{ path('event_reservation', {'id': event.id, 'timestamp': timestamp}) }}">Reserve Your Spot!</a>
             </div>
         </div>
+        <div class="row">
+            <div class="col-xs-12">
+                {{ dump(reservations) }}
+            </div>
+        </div>
     </div>
 {% endblock %}

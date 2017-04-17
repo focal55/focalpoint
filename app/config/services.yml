@@ -16,3 +16,11 @@ services:
     session.handler.pdo:
         class:     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
         arguments: ['@pdo', {lock_mode: 0}]
+
+    app.util.schedule_calendar_utils:
+        class: AppBundle\Util\ScheduleCalendarUtils
+        arguments: ['@service_container']
+
+    app.util.reservations_utils:
+        class: AppBundle\Util\ReservationsUtils
+        arguments: ['@service_container']

@@ -3,6 +3,7 @@
 namespace AppBundle\DataFixtures\ORM;
 
 use AppBundle\Entity\Event;
+use AppBundle\Entity\Reservation;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use AccountBundle\Entity\Account;
@@ -81,6 +82,7 @@ class LoadFixtures implements FixtureInterface
         $manager->flush();
 
         // Events
+        $events = [];
         $date = new \DateTime('2017-01-01 6:00:00');
         $e = new Event();
         $e->setTitle('Small Group');
@@ -93,6 +95,7 @@ class LoadFixtures implements FixtureInterface
         $e->setStatus('active');
 
         $manager->persist($e);
+        $events[] = $e;
 
         // Events
         $e = new Event();
@@ -106,7 +109,23 @@ class LoadFixtures implements FixtureInterface
         $e->setStatus('active');
 
         $manager->persist($e);
+        $events[] = $e;
 
         $manager->flush();
+
+        // Reservations.
+        foreach ($events as $event) {
+            /* @var $event \AppBundle\Entity\Event */
+            $r = new Reservation();
+            $r->setEvent($event->getId());
+            $r->setAttendee($users['margaret']);
+            $days = $event->getDayOfWeek();
+            $date = new \DateTime();
+            $date->setTimestamp(strtotime('previous ' . $days[0]));
+            $r->setEventDate($date);
+            $manager->persist($r);
+        }
+        $manager->flush();
+
     }
 }

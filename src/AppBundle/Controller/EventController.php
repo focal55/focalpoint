@@ -6,6 +6,7 @@ use AppBundle\Entity\Event;
 use AppBundle\Entity\EventModification;
 use AppBundle\Form\EventFormType;
 use AppBundle\Form\ReservationFormType;
+use AppBundle\Form\ReservationManageFormType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,140 +15,32 @@ class EventController extends Controller
 {
 
     /**
-     * @Route("/schedule/{timestamp}", name="schedule")
+     * @Route("/schedule/{timestamp}", name="schedule", defaults={"timestamp" = "today"})
      */
-    public function indexAction(Request $request, $timestamp = null) {
+    public function indexAction(Request $request, $timestamp)
+    {
 
-        $current_date = NULL;
-        $next_sunday = NULL;
-        $previous_sunday = NULL;
-
-        $em = $this->get('doctrine.orm.entity_manager');
-        $repo = $em->getRepository('AppBundle:Event');
-        $events = $repo->findUpcoming($timestamp);
-
-        $displayEvents = ['sun' => [], 'mon' => [], 'tue' => [], 'wed' => [], 'thur' => [], 'fri' => [], 'sat' => []];
-
-        // Generate dates.
-        $calendar = [];
-        // Today's day number.
-        $date = new \DateTime;
-        $current_date = $date->format('U');
-
-        if ($timestamp) {
-            $date->setTimestamp($timestamp);
+        if ($timestamp == "today") {
+            $timestamp = time();
         }
 
-        $day = $date->format('w');
-        // If not already Sunday.
-        if ($day > 0) {
-            // Sunday.
-            $date->modify('-'.$day.' days');
-            $calendar['sun']['display'] = $date->format('D j');
-            $calendar['sun']['date'] = $date->format('n/j/Y');
+        // Build Calendar display.
+        $calendarUtil = $this->get('app.util.schedule_calendar_utils');
+        $calendarUtil->configure($timestamp);
 
-            $date->modify('next monday');
-            $calendar['mon']['display'] = $date->format('D j');
-            $calendar['mon']['date'] = $date->format('n/j/Y');
-
-            $date->modify('next tuesday');
-            $calendar['tue']['display'] = $date->format('D j');
-            $calendar['tue']['date'] = $date->format('n/j/Y');
-
-            $date->modify('next wednesday');
-            $calendar['wed']['display'] = $date->format('D j');
-            $calendar['wed']['date'] = $date->format('n/j/Y');
-
-            $date->modify('next thursday');
-            $calendar['thur']['display'] = $date->format('D j');
-            $calendar['thur']['date'] = $date->format('n/j/Y');
-
-            $date->modify('next friday');
-            $calendar['fri']['display'] = $date->format('D j');
-            $calendar['fri']['date'] = $date->format('n/j/Y');
-
-            $date->modify('next saturday');
-            $calendar['sat']['display'] = $date->format('D j');
-            $calendar['sat']['date'] = $date->format('n/j/Y');
-            $month_year = $date->format('F Y');
-        }
-        else {
-            // Sunday, start of week.
-            $calendar['sun']['display'] = $date->format('D j');
-            $calendar['sun']['date'] = $date->format('n/j/Y');
-
-            $date->modify('next monday');
-            $calendar['mon']['display'] = $date->format('D j');
-            $calendar['mon']['date'] = $date->format('n/j/Y');
-
-            $date->modify('next tuesday');
-            $calendar['tue']['display'] = $date->format('D j');
-            $calendar['tue']['date'] = $date->format('n/j/Y');
-
-            $date->modify('next wednesday');
-            $calendar['wed']['display'] = $date->format('D j');
-            $calendar['wed']['date'] = $date->format('n/j/Y');
-
-            $date->modify('next thursday');
-            $calendar['thur']['display'] = $date->format('D j');
-            $calendar['thur']['date'] = $date->format('n/j/Y');
-
-            $date->modify('next friday');
-            $calendar['fri']['display'] = $date->format('D j');
-            $calendar['fri']['date'] = $date->format('n/j/Y');
-
-            $date->modify('next saturday');
-            $calendar['sat']['display'] = $date->format('D j');
-            $calendar['sat']['date'] = $date->format('n/j/Y');
-            $month_year = $date->format('F Y');
-        }
-
-        // Build Time Picker.
-        $weekPicker = new \DateTime();
-        if ($timestamp) {
-            $weekPicker->setTimestamp($timestamp);
-        }
-        else {
-            $weekPicker->setTimestamp($current_date);
-        }
-        $weekPicker->modify('last sunday');
-        $previous_sunday = $weekPicker->format('U');
-        $weekPicker->modify('next sunday')->modify('next sunday');
-        $next_sunday = $weekPicker->format('U');
-
-        // Separate events into day buckets.
-        if ($events) {
-            // Load Event Modification Repo.
-            $modRepo = $em->getRepository('AppBundle:EventModification');
-            // For each event.
-            foreach ($events as $event) {
-                // Get the days this event is offered.
-                $displayOnDays = $event->getDayOfWeek();
-                foreach ($displayOnDays as $day) {
-                    // Find Modifications
-                    // Build a timestamp for this event.
-                    $timestamp = strtotime($calendar[strtolower($day)]['date'] . ' ' . $event->getEventStartTime());
-                    $mod = $modRepo->findModification($event, $timestamp);
-
-                    $displayEvents[$day][] = [
-                        'id' => $event->getId(),
-                        'title' => $event->getTitle(),
-                        'start' => $event->getEventStartTime(),
-                        'end' => $event->getEventEndTime(),
-                        'timestamp' => $timestamp,
-                        'mod' => $mod
-                    ];
-                }
-            }
-        }
+        $displayEvents = $calendarUtil->getEventsDisplay('week');
+        $calendar = $calendarUtil->getCurrentWeekCalendar();
+        $current_date = $calendarUtil->getCurrentWeekDateObject()->format('U');
+        $previous_sunday = $calendarUtil->getPreviousSundayTimestamp();
+        $next_sunday = $calendarUtil->getNextSundayTimestamp();
 
         return $this->render('events/schedule.html.twig', [
             'displayEvents' => $displayEvents,
-            'calendar' => $calendar,
+            'calendar' => $calendar['calendar'],
             'current_date' => $current_date,
             'previous_sunday' => $previous_sunday,
             'next_sunday' => $next_sunday,
-            'month_year' => $month_year
+            'month_year' => $calendar['month_year']
         ]);
     }
 
@@ -251,10 +144,16 @@ class EventController extends Controller
         $modRepo = $em->getRepository('AppBundle:EventModification');
         $mod = $modRepo->findModification($event, $timestamp);
 
+        // Get reservations.
+        $reservationsUtil = $this->get('app.util.reservations_utils');
+        $reservations = $reservationsUtil->getEventReservations($event);
+
+
         return $this->render('events/detail.html.twig', [
             'event' => $event,
             'timestamp' => is_numeric($timestamp) ? $timestamp : null,
-            'modification' => $mod
+            'modification' => $mod,
+            'reservations' => $reservations
         ]);
     }
 
@@ -292,5 +191,13 @@ class EventController extends Controller
         return $this->render('events/new.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/ajax/checkin/{id}/{timestamp}", name="event_checkin")
+     */
+    public function checkInAction(Request $request, Event $event, $timestamp)
+    {
+
     }
 }
